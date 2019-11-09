@@ -1,25 +1,30 @@
-import Jetson.GPIO as GPIO
+
+#import Adafruit_BBIO.GPIO as GPIO
+import sys
+sys.path.append('Jetson/jetson-gpio-master/lib/python')
+sys.path.append('Jetson/jetson-gpio-master/lib/python/Jetson/GPIO')
+import Jetson.GPIO as JGPIO
+
 
 class IEEE_GPIO:
 
     def __init__(self, platform):
-        if (platform ! = "Jetson" or platform ! = "BeagleBone" or platform ! = "RaspberryPi") {
-            raise Exception("Platform isn't compatible. Requires Jetson, BeagleBone, or RaspberryPi")
-        }
+        if platform != "Jetson" or platform != "BeagleBone" or platform != "RaspberryPi":
+            raise Exception("Platform isn't compatible. Requires Jetson, BeagleBone, or RaspberryPi.")
         self.platform = platform
 
     def set_input_pin(input_pin):
-        GPIO.setmode(GPIO.BOARD)  #BCM pin-numbering scheme for 40 pins
+        JGPIOGPIO.setmode(JGPIO.BOARD)  #BCM pin-numbering scheme for 40 pins
 
         prev_value = None
 
         # Pin Setup:
-        GPIO.setup(input_pin, GPIO.IN)  # set pin as an input pin
+        JGPIO.setup(input_pin, JGPIO.IN)  # set pin as an input pin
         try:
             while True:
-                value = GPIO.input(input_pin)
+                value = JGPIO.input(input_pin)
                 if value != prev_value:
-                    if value == GPIO.HIGH:
+                    if value == JGPIO.HIGH:
                         value_str = "HIGH"
                     else:
                         value_str = "LOW"
@@ -28,31 +33,31 @@ class IEEE_GPIO:
                     prev_value = value
                 time.sleep(1)
         finally:
-            GPIO.cleanup()
+            JGPIO.cleanup()
 
     def set_pin_output(output_pin):
         # Pin Setup:
-        GPIO.setmode(GPIO.BOARD)
+        JGPIO.setmode(JGPIO.BOARD)
         # set pin as an output pin with optional initial state of HIGH
-        GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
+        JGPIO.setup(output_pin, JGPIO.OUT, initial=JGPIO.HIGH)
 
-        curr_value = GPIO.HIGH
+        curr_value = JGPIO.HIGH
         try:
             while True:
                 time.sleep(1)
                 # Toggle the output every second
                 print("Outputting {} to pin {}".format(curr_value, output_pin))
-                GPIO.output(output_pin, curr_value)
-                curr_value ^= GPIO.HIGH
+                JGPIO.output(output_pin, curr_value)
+                curr_value ^= JGPIO.HIGH
         finally:
-            GPIO.cleanup()
+            JGPIO.cleanup()
 
     def set_pin_pwn(output_pin):
         # Pin Setup:
-        GPIO.setmode(GPIO.BOARD)
+        JGPIO.setmode(JGPIO.BOARD)
         # set pin as an output pin with optional initial state of HIGH
-        GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-        p = GPIO.PWM(output_pin, 50)
+        JGPIO.setup(output_pin, JGPIO.OUT, initial=JGPIO.HIGH)
+        p = JGPIO.PWM(output_pin, 50)
         p.start(25)
 
         try:
@@ -60,4 +65,4 @@ class IEEE_GPIO:
                 time.sleep(1)
         finally:
             p.stop()
-            GPIO.cleanup()
+            JGPIO.cleanup()
