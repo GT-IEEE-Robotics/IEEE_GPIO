@@ -1,11 +1,19 @@
 
 #import Adafruit_BBIO.GPIO as GPIO
 import sys
+sys.path.append('BeagleBone/adafruit-beaglebone-io-python-master')
+import Adafruit_BBIO.GPIO as BGPIO
+sys.path.append('Jetson/jetson-gpio-master/lib/python')
+import Jetson.GPIO as JGPIO
+import Adafruit_BBIO.PWM as PWM
+import time
+
+
+import sys
 sys.path.append('Jetson/jetson-gpio-master/lib/python')
 sys.path.append('Jetson/jetson-gpio-master/lib/python/Jetson/GPIO')
 import Jetson.GPIO as JGPIO
 import Adafruit_BBIO.PWM as PWM
-
 
 class IEEE_GPIO:
 
@@ -31,7 +39,7 @@ class IEEE_GPIO:
             finally:
                 JGPIO.cleanup()
         else:
-            GPIO.setup("P8_7", OUT)
+            BGPIO.setup("P8_7", OUT)
 
     def set_pin_output(output_pin):
         if self.platform == "Jetson" or self.platform == "RaspberryPi":
@@ -52,7 +60,7 @@ class IEEE_GPIO:
                 JGPIO.cleanup()
 
         else:
-            GPIO.setup("P8_7", IN)
+            BGPIO.setup("P8_7", IN)
 
     def set_pin_pwn(output_pin):
         if self.platform == "Jetson" or self.platform == "RaspberryPi":
@@ -74,9 +82,3 @@ class IEEE_GPIO:
             PWM.cleanup()
             PWM.start("P9_14", 50, 2000, 0)
             PWM.cleanup()
-
-
-
-
-
-            
